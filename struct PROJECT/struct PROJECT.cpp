@@ -1,32 +1,8 @@
 #include "pch.h"
 #include <iostream>
-#include <windows.h>
+#include "structures.h"
+#include <string>
 using namespace std;
-
-struct TEAM {
-	string name;
-	string playerNames[5];
-};
-
-struct DATE {
-	int day;
-	int month;
-	int year;
-};
-
-struct HOUR {
-	short int min;
-	short int hour;
-};
-
-struct TOURNAMENT_INFO{
-	string name;
-	DATE date;
-	HOUR startTime;
-	HOUR endTime;
-	TEAM teams[16];
-	string prize;
-};
 
 class Project
 {
@@ -51,9 +27,29 @@ public:
 	}
 };
 
+class Tournamet {
+private:
+	int tournamentCount = 0;
+	TOURNAMENT_INFO tournaments[100];
+
+public:
+	void create(TOURNAMENT_INFO tournament) {
+		tournaments[tournamentCount++] = tournament;
+	}
+};
+
 int main()
 {
+	int tournamentCount = 0;
+	TOURNAMENT_INFO tournaments[100];
+
+	TOURNAMENT_INFO t = { "T1", { 1, 1, 1111 }, { 21, 0 }, { 23, 0 }, { { "team1", "t1", { "p1", "p2", "p3", "p4", "p5" } } }, "kupa" };
+
+	Tournamet tournament;
+	tournament.create(t);
+
 	Project project;
 	system("color 0b");
 	project.Greetings();
+
 }
