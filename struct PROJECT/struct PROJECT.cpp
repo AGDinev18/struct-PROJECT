@@ -4,16 +4,92 @@
 #include <string>
 using namespace std;
 
-class Project
+
+class Tournament {
+private:
+
+	short int tournamentCount = 0;
+	TOURNAMENT_INFO tournaments[100];
+
+public:	
+
+	void create(TOURNAMENT_INFO tournament) {
+		tournaments[tournamentCount++] = tournament;
+	}
+
+};
+
+
+class TournamentMenu
 {
+
+private:
+	Tournament tournament;
+
 public:
+
+	TournamentMenu(Tournament t) {
+		this->tournament = t;
+	}
 
 	void Greetings() {
 		DisplayMenu();
 	}
 
 	void DisplayMenu() {
+
 	}
+
+	 void CreateTournamentMenu() {
+
+
+			TOURNAMENT_INFO ti;
+			cout << "\nEnter tournament name: ";
+			cin >> ti.name;
+			cout << "Enter date: ";
+			cout << "\nDay: ";
+			cin >> ti.date.day;
+			cout << "Month: ";
+			cin >> ti.date.month;
+			cout << "Year: ";
+			cin >> ti.date.year;
+			cout << "Enter start time:";
+			cout << "\nHour: ";
+			cin >> ti.startTime.hour;
+			cout << "Minutes: ";
+			cin >> ti.startTime.min;
+			cout << "Enter end time:";
+			cout << "\nHour: ";
+			cin >> ti.endTime.hour;
+			cout << "Minutes: ";
+			cin >> ti.endTime.min;
+			cout << "Enter tournament's prize: ";
+			cin >> ti.prize;
+			cout << "Team count: ";
+			cin >> ti.teamCount;
+			cout << "Enter how much players are in a team: ";
+			cin >> ti.playersOnTeam;
+
+			for (int j = 0; j < ti.teamCount; j++)
+			{
+				cout << "Enter data for team " << j + 1<<": \n";
+				cout << "Team name: ";
+				cin >> ti.teams[j].name;
+				cout << "Team tag: ";
+				cin >> ti.teams[j].tag;
+				
+				cout << "Enter players' names\n";
+
+				for (int i = 1; i <= ti.playersOnTeam; i++)
+				{
+					cout << "Player " << i << ": ";
+					cin >> ti.teams[j].playerNames[i];
+				}
+
+			}
+
+			tournament.create(ti);
+		}
 
 	void MenuChoice() {
 		int choice;
@@ -25,70 +101,22 @@ public:
 		}
 
 	}
-};
 
-class Tournament {
-private:
-
-	short int tournamentCount = 0;
-	short int teamCount = 0;
-	short int playersCountPerTeam = 0;
-	TOURNAMENT_INFO tournaments[100];
-
-public:
-
-	void create(TOURNAMENT_INFO tournament) {
-		tournaments[tournamentCount++] = tournament;
-	}
-
-	void insert() {
-		cout << "\nEnter tournament name: "; 
-		cin >> tournaments[tournamentCount].name;
-		cout << "Enter date: ";
-		cout << "\nDay: "; 
-		cin >> tournaments[tournamentCount].date.day;
-		cout << "Month: "; 
-		cin >> tournaments[tournamentCount].date.month;
-		cout << "Year: "; 
-		cin >> tournaments[tournamentCount].date.year;
-		cout << "Enter start time:"; 
-		cout << "\nHour: ";
-		cin >> tournaments[tournamentCount].startTime.hour;
-		cout << "Minutes: ";
-		cin >> tournaments[tournamentCount].startTime.min;
-		cout << "Enter end time:";
-		cout << "\nHour: "; 
-		cin >> tournaments[tournamentCount].endTime.hour;
-		cout << "Minutes: "; 
-		cin >> tournaments[tournamentCount].endTime.min;
-		cout << "Enter team name: ";
-		cin >> tournaments[tournamentCount].teams[teamCount].name;
-		cout << "Enter team tag: ";
-		cin >> tournaments[tournamentCount].teams[teamCount].tag;
-		cout << "Enter how much players are in a team: ";
-		cin >> tournaments[tournamentCount].playersOnTeam;
-		cout << "Enter players' names\n";
-		for (int i = 1; i <= tournaments[tournamentCount].playersOnTeam; i++)
-		{
-			cout << "Player " << i << ": ";
-			cin >> tournaments[tournamentCount].teams[teamCount].playerNames[playersCountPerTeam++];
-		}
-		playersCountPerTeam = 0;
-		cout << "Enter tournament's prize: ";
-		cin >> tournaments[tournamentCount].prize;
-	}
 
 };
+
+
 
 int main()
 {
 	//TOURNAMENT_INFO t = { "T1", { 1, 1, 1111 }, { 21, 0 }, { 23, 0 }, { { "team1", "t1", { "p1", "p2", "p3", "p4", "p5" } } }, "kupa" };
 
 	Tournament tournament;
+	
 	//tournament.create(t);
 
-	Project project;
+	TournamentMenu menu(tournament);
 	system("color 0b");
-	tournament.insert();
+	menu.CreateTournamentMenu();
 
 }

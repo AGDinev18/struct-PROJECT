@@ -26,5 +26,7 @@ struct TOURNAMENT_INFO {
 	HOUR endTime;
 	short int playersOnTeam;
 	TEAM teams[16];
+	int teamCount;
 	string prize;
+	size_t id;
 };
