@@ -1,3 +1,0 @@
-﻿  struct PROJECT.cpp
-C:\Users\alex_04\Documents\GitHub\struct-PROJECT\struct PROJECT\struct PROJECT\struct PROJECT.cpp(105,1): warning C4065: switch statement contains 'default' but no 'case' labels
-  struct PROJECT.vcxproj -> C:\Users\alex_04\Documents\GitHub\struct-PROJECT\struct PROJECT\Debug\struct PROJECT.exe
