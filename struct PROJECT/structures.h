@@ -12,9 +12,6 @@ struct DATE {
 	short int day;
 	short int month;
 	short int year;
-};
-
-struct HOUR {
 	short int hour;
 	short int min;
 };
@@ -22,8 +19,9 @@ struct HOUR {
 struct TOURNAMENT_INFO {
 	string name;
 	DATE date;
-	HOUR startTime;
-	HOUR endTime;
+	DATE startTime;
+	DATE endTime;
+	DATE duration;
 	short int playersOnTeam;
 	TEAM teams[16];
 	int teamCount;
