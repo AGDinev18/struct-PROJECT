@@ -1,6 +1,3 @@
-// struct PROJECT.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
 #include "structures.h"
 #include <string>
@@ -34,37 +31,175 @@ public:
 		this->tournament = t;
 	}
 
-	void Greetings() {
-		DisplayMenu();
+	void greetings() {
+		displayMenu();
 	}
 
-	void DisplayMenu() {
+	void displayMenu() {
 
 	}
 
-	void CreateTournamentMenu() {
+	bool isLeap(int year)
+	{
+		// Return true if year  
+		// is a multiple pf 4 and 
+		// not multiple of 100. 
+		// OR year is multiple of 400. 
+		return (((year % 4 == 0) &&
+			(year % 100 != 0)) ||
+			(year % 400 == 0));
+	}
 
+	// Returns true if given 
+	// year is valid or not. 
+	bool isValidDate(int d, int m, int y)
+	{
+		const int MAX_VALID_YR = 9999;
+		const int MIN_VALID_YR = 1800;
+		// If year, month and day  
+		// are not in given range 
+		if (y > MAX_VALID_YR ||
+			y < MIN_VALID_YR)
+			return false;
+		if (m < 1 || m > 12)
+			return false;
+		if (d < 1 || d > 31)
+			return false;
+
+		// Handle February month  
+		// with leap year 
+		if (m == 2)
+		{
+			if (isLeap(y))
+				return (d <= 29);
+			else
+				return (d <= 28);
+		}
+
+		// Months of April, June,  
+		// Sept and Nov must have  
+		// number of days less than 
+		// or equal to 30. 
+		if (m == 4 || m == 6 ||
+			m == 9 || m == 11)
+			return (d <= 30);
+
+		return true;
+	}
+
+	void durationCalc(DATE start, DATE end, DATE& dur) {
+
+		bool stop = true;
+
+		dur.day = 0;
+		dur.month = 0;
+		dur.year = 0;
+
+		if (start.min > end.min) {
+			end.hour--;
+			end.min += 60;
+		}
+		dur.min = end.min - start.min;
+		dur.hour = end.hour - start.hour;
+
+		do
+		{
+			if (end.day > start.day) {
+				end.day--;
+				dur.day++;
+			}
+			else
+			{
+				stop = false;
+			}
+
+		} while (stop);
+
+		stop = true;
+
+		do
+		{
+			if (end.month > start.month) {
+				end.month--;
+				dur.month++;
+			}
+			else
+			{
+				stop = false;
+			}
+		} while (stop);
 		
+		stop = true;
+
+		do
+		{
+			if (end.year > start.year) {
+				end.year--;
+				dur.year++;
+			}
+			else
+			{
+				stop = false;
+			}
+		} while (stop);
+	}
+
+	DATE dateInput() {
+		DATE date;
+		bool dateTest = true;
+		do
+		{
+
+			cout << "\nDay: ";
+			cin >> date.day;
+			cout << "Month: ";
+			cin >> date.month;
+			cout << "Year: ";
+			cin >> date.year;
+
+			dateTest = isValidDate(date.day, date.month, date.year);
+
+			if (!dateTest)
+			{
+				cout << "\nIncorect date, please try again:\n";
+			}
+
+		} while (!dateTest);
+		return date;
+	}
+
+	void createTournamentMenu() {
+
 		TOURNAMENT_INFO ti;
+
 		cout << "\nEnter tournament name: ";
+		cin.ignore();
 		getline(cin, ti.name);
-		cout << "Enter date: ";
-		cout << "\nDay: ";
-		cin >> ti.date.day;
-		cout << "Month: ";
-		cin >> ti.date.month;
-		cout << "Year: ";
-		cin >> ti.date.year;
+
+		// DATE
+
+		cout << "Enter start date:";
+		ti.startTime = dateInput();
+
 		cout << "Enter start time:";
 		cout << "\nHour: ";
 		cin >> ti.startTime.hour;
 		cout << "Minutes: ";
 		cin >> ti.startTime.min;
+
+		cout << "Enter end date:";
+		ti.endTime = dateInput();
+
 		cout << "Enter end time:";
 		cout << "\nHour: ";
 		cin >> ti.endTime.hour;
 		cout << "Minutes: ";
 		cin >> ti.endTime.min;
+
+		durationCalc(ti.startTime, ti.endTime, ti.duration);
+		printf("%02dy %02dm %02dd %02dh:%02ds", ti.duration.year, ti.duration.month, ti.duration.day, ti.duration.hour, ti.duration.min);
+		cout << endl;
+
 		cout << "Enter tournament's prize: ";
 		cin.ignore();
 		getline(cin, ti.prize);
@@ -79,10 +214,13 @@ public:
 			cout << "Team name: ";
 			cin.ignore();
 			getline(cin, ti.teams[j].name);
+
 			cout << "Team tag: ";
 			cin.ignore();
 			getline(cin, ti.teams[j].tag);
+
 			cout << "Enter players' names\n";
+
 			for (int i = 1; i <= ti.playersOnTeam; i++)
 			{
 				cout << "Player " << i << ": ";
@@ -95,7 +233,7 @@ public:
 		tournament.create(ti);
 	}
 
-	void MenuChoice() {
+	void menuChoice() {
 		int choice;
 		cin >> choice;
 		switch (choice)
@@ -121,17 +259,6 @@ int main()
 
 	TournamentMenu menu(tournament);
 	system("color 0b");
-	menu.CreateTournamentMenu();
+	menu.createTournamentMenu();
 
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
