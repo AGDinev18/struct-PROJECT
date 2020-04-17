@@ -9,11 +9,11 @@ struct TEAM {
 };
 
 struct DATE {
-	short int day;
-	short int month;
-	short int year;
-	short int hour;
-	short int min;
+	int day;
+	int month;
+	int year;
+	int hour;
+	int min;
 };
 
 struct TOURNAMENT_INFO {
@@ -22,7 +22,7 @@ struct TOURNAMENT_INFO {
 	DATE startTime;
 	DATE endTime;
 	DATE duration;
-	short int playersOnTeam;
+	int playersOnTeam;
 	TEAM teams[16];
 	int teamCount;
 	string prize;
