@@ -1,9 +1,10 @@
-#include "pch.h"
 #include <iostream>
-#include "structures.h"
 #include <string>
-using namespace std;
+#include <sstream>
+#include "structures.h"
+#include "helpers.h"
 
+using namespace std;
 
 class Tournament {
 private:
@@ -18,7 +19,6 @@ public:
 	}
 
 };
-
 
 class TournamentMenu
 {
@@ -40,55 +40,24 @@ public:
 
 	}
 
-	bool isLeap(int year)
-	{
-		// Return true if year  
-		// is a multiple pf 4 and 
-		// not multiple of 100. 
-		// OR year is multiple of 400. 
-		return (((year % 4 == 0) &&
-			(year % 100 != 0)) ||
-			(year % 400 == 0));
-	}
+	bool checkIncorrectDate(DATE start, DATE end) {
 
-	// Returns true if given 
-	// year is valid or not. 
-	bool isValidDate(int d, int m, int y)
-	{
-		const int MAX_VALID_YR = 9999;
-		const int MIN_VALID_YR = 1800;
-		// If year, month and day  
-		// are not in given range 
-		if (y > MAX_VALID_YR ||
-			y < MIN_VALID_YR)
+		if (start.year > end.year
+			|| (start.year == end.year && start.month > end.month)
+			|| (start.month == end.month && start.day > end.day)
+			|| (start.day == end.day && start.hour > end.hour)
+			|| (start.hour == end.hour && start.min >= end.min))
 			return false;
-		if (m < 1 || m > 12)
-			return false;
-		if (d < 1 || d > 31)
-			return false;
-
-		// Handle February month  
-		// with leap year 
-		if (m == 2)
-		{
-			if (isLeap(y))
-				return (d <= 29);
-			else
-				return (d <= 28);
-		}
-
-		// Months of April, June,  
-		// Sept and Nov must have  
-		// number of days less than 
-		// or equal to 30. 
-		if (m == 4 || m == 6 ||
-			m == 9 || m == 11)
-			return (d <= 30);
 
 		return true;
 	}
-
 	void durationCalc(DATE start, DATE end, DATE& dur) {
+
+		bool stop = true;
+
+		dur.day = 0;
+		dur.month = 0;
+		dur.year = 0;
 
 		if (start.min > end.min) {
 			end.hour--;
@@ -97,92 +66,111 @@ public:
 
 		dur.min = end.min - start.min;
 		dur.hour = end.hour - start.hour;
-	
-	}
 
-	DATE dateInput() {
-		DATE date;
-		bool dateTest = true;
 		do
 		{
-
-			cout << "\nDay: ";
-			cin >> date.day;
-			cout << "Month: ";
-			cin >> date.month;
-			cout << "Year: ";
-			cin >> date.year;
-
-			dateTest = isValidDate(date.day, date.month, date.year);
-
-			if (!dateTest)
+			if (end.day > start.day) {
+				end.day--;
+				dur.day++;
+			}
+			else
 			{
-				cout << "Incorect date, please try again:\n";
+				stop = false;
 			}
 
-		} while (!dateTest);
-		return date;
+		} while (stop);
+
+		stop = true;
+
+		do
+		{
+			if (end.month > start.month) {
+				end.month--;
+				dur.month++;
+			}
+			else
+			{
+				stop = false;
+			}
+		} while (stop);
+
+		stop = true;
+
+		do
+		{
+			if (end.year > start.year) {
+				end.year--;
+				dur.year++;
+			}
+			else
+			{
+				stop = false;
+			}
+		} while (stop);
 	}
 
 	void createTournamentMenu() {
 
 		TOURNAMENT_INFO ti;
 
+		bool stop;
+
 		cout << "\nEnter tournament name: ";
 		cin.ignore();
 		getline(cin, ti.name);
 
 		// DATE
+		do
+		{
+			designInputMenu();
+			cout << "Enter start date:\n";
+			enterDate(ti.startTime.year, ti.startTime.month, ti.startTime.day);
+			enterTime(ti.startTime.hour, ti.startTime.min);
+			designInputMenu();
+			cout << "Enter end date:\n";
+			enterDate(ti.endTime.year, ti.endTime.month, ti.endTime.day);
+			enterTime(ti.endTime.hour, ti.endTime.min);
+			stop = checkIncorrectDate(ti.startTime, ti.endTime);
+			if (stop != true)
+			{
+				cout << "Error: The starting date is after the ending date!\n";
+				cout << "Please try again!:\n";
+			}
+			cout << endl;
+		} while (stop != true);
 
-		cout << "Enter start date:";
-		ti.startTime = dateInput();
-		cout << "Enter end date:";
-		ti.endTime = dateInput();
-
-		// TIME
-
-		cout << "Enter start time:";
-		cout << "\nHour: ";
-		cin >> ti.startTime.hour;
-		cout << "Minutes: ";
-		cin >> ti.startTime.min;
-		cout << "Enter end time:";
-		cout << "\nHour: ";
-		cin >> ti.endTime.hour;
-		cout << "Minutes: ";
-		cin >> ti.endTime.min;
 		durationCalc(ti.startTime, ti.endTime, ti.duration);
-		printf("%02d:%02d", ti.duration.hour, ti.duration.min);
-		cout << endl;
-
+		printf("%02dy %02dm %02dd %02dh:%02dm\n\n", ti.duration.year, ti.duration.month, ti.duration.day, ti.duration.hour, ti.duration.min);
 		cout << "Enter tournament's prize: ";
 		cin.ignore();
 		getline(cin, ti.prize);
+		designInputMenu();
 		cout << "Team count: ";
 		cin >> ti.teamCount;
 		cout << "Enter how much players are in a team: ";
 		cin >> ti.playersOnTeam;
+		designInputMenu();
 
 		for (int j = 0; j < ti.teamCount; j++)
 		{
 			cout << "Enter data for team " << j + 1 << ": \n";
-			cout << "Team name: ";
+			cout << " Team name: ";
 			cin.ignore();
 			getline(cin, ti.teams[j].name);
 
-			cout << "Team tag: ";
+			cout << " Team tag: ";
 			cin.ignore();
 			getline(cin, ti.teams[j].tag);
 
-			cout << "Enter players' names\n";
+			cout << "Enter player's names\n";
 
 			for (int i = 1; i <= ti.playersOnTeam; i++)
 			{
-				cout << "Player " << i << ": ";
+				cout << " Player " << i << ": ";
 				cin.ignore();
 				getline(cin, ti.teams[j].playerNames[i]);
 			}
-
+			designInputMenu();
 		}
 
 		tournament.create(ti);
@@ -199,10 +187,7 @@ public:
 
 	}
 
-
 };
-
-
 
 int main()
 {

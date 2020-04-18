@@ -5,6 +5,11 @@
 
 using namespace std;
 
+void designInputMenu()
+{
+	cout << "------------------\n";
+}
+
 bool tryReadInt(int& result, int min, int max) {
 
 	string input = "";
@@ -94,9 +99,9 @@ void enterDate(int& year, int& month, int& day)
 
 	do
 	{
-		year = enterInt(2000, 2030, "Year: ");
-		month = enterInt(1, 12, "Month: ");
-		day = enterInt(1, 31, "Day: ");
+		day = enterInt(1, 31, " Day: ");
+		month = enterInt(1, 12, " Month: ");
+		year = enterInt(2000, 2030, " Year: ");
 
 
 		isDateValid = isValidDate(day, month, year);
@@ -106,7 +111,7 @@ void enterDate(int& year, int& month, int& day)
 
 void enterTime(int& hour, int& min) {
 
-	hour = enterInt(0, 24, "Hour: ");
-	min = enterInt(0, 59, "Minute: ");
+	hour = enterInt(0, 24, " Hour: ");
+	min = enterInt(0, 59, " Minute: ");
 
 }

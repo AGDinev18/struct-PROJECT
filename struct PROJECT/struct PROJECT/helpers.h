@@ -12,3 +12,5 @@ void enterDate(int& year, int& month, int& day);
 int enterInt(int min, int max, string text);
 
 void enterTime(int& hour, int& min);
+
+void designInputMenu();

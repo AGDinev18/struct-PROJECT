@@ -20,7 +20,6 @@ public:
 
 };
 
-
 class TournamentMenu
 {
 
@@ -43,16 +42,15 @@ public:
 
 	bool checkIncorrectDate(DATE start, DATE end) {
 
-		if (start.year > end.year 
-				|| (start.year == end.year && start.month > end.month) 
-				|| (start.month == end.month && start.day > end.day) 
-				|| (start.day == end.day && start.hour > end.hour) 
-				|| (start.hour == end.hour && start.min >= end.min))
+		if (start.year > end.year
+			|| (start.year == end.year && start.month > end.month)
+			|| (start.month == end.month && start.day > end.day)
+			|| (start.day == end.day && start.hour > end.hour)
+			|| (start.hour == end.hour && start.min >= end.min))
 			return false;
-		
+
 		return true;
 	}
-
 	void durationCalc(DATE start, DATE end, DATE& dur) {
 
 		bool stop = true;
@@ -124,54 +122,55 @@ public:
 		// DATE
 		do
 		{
+			designInputMenu();
 			cout << "Enter start date:\n";
 			enterDate(ti.startTime.year, ti.startTime.month, ti.startTime.day);
 			enterTime(ti.startTime.hour, ti.startTime.min);
+			designInputMenu();
 			cout << "Enter end date:\n";
 			enterDate(ti.endTime.year, ti.endTime.month, ti.endTime.day);
 			enterTime(ti.endTime.hour, ti.endTime.min);
 			stop = checkIncorrectDate(ti.startTime, ti.endTime);
-
 			if (stop != true)
 			{
 				cout << "Error: The starting date is after the ending date!\n";
 				cout << "Please try again!:\n";
 			}
-
+			cout << endl;
 		} while (stop != true);
 
 		durationCalc(ti.startTime, ti.endTime, ti.duration);
-
-		printf("%02dy %02dm %02dd %02dh:%02dm\n", ti.duration.year, ti.duration.month, ti.duration.day, ti.duration.hour, ti.duration.min);
-
+		printf("%02dy %02dm %02dd %02dh:%02dm\n\n", ti.duration.year, ti.duration.month, ti.duration.day, ti.duration.hour, ti.duration.min);
 		cout << "Enter tournament's prize: ";
 		cin.ignore();
 		getline(cin, ti.prize);
+		designInputMenu();
 		cout << "Team count: ";
 		cin >> ti.teamCount;
 		cout << "Enter how much players are in a team: ";
 		cin >> ti.playersOnTeam;
+		designInputMenu();
 
 		for (int j = 0; j < ti.teamCount; j++)
 		{
 			cout << "Enter data for team " << j + 1 << ": \n";
-			cout << "Team name: ";
+			cout << " Team name: ";
 			cin.ignore();
 			getline(cin, ti.teams[j].name);
 
-			cout << "Team tag: ";
+			cout << " Team tag: ";
 			cin.ignore();
 			getline(cin, ti.teams[j].tag);
 
-			cout << "Enter players' names\n";
+			cout << "Enter player's names\n";
 
 			for (int i = 1; i <= ti.playersOnTeam; i++)
 			{
-				cout << "Player " << i << ": ";
+				cout << " Player " << i << ": ";
 				cin.ignore();
 				getline(cin, ti.teams[j].playerNames[i]);
 			}
-
+			designInputMenu();
 		}
 
 		tournament.create(ti);
