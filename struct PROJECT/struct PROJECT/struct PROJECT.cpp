@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <string>
 #include <sstream>
 #include "structures.h"
@@ -33,7 +33,7 @@ public:
 	}
 
 	void greetings() {
-		
+
 	}
 
 	void displayMenu() {
@@ -51,13 +51,15 @@ public:
 	void displayTournaments() {
 		if (tournament.tournamentCount > 0)
 		{
-			cout << "List of all tournaments:\n";
-
+			cout << "\nList of all tournaments:\n\n";
+			designInputMenu();
 			for (int i = 0; i < tournament.tournamentCount; i++)
 			{
-				cout << "\nID = " << tournament.tournaments[i].id << endl;
-				cout << "\nTournament's name: " << tournament.tournaments[i].name << endl;
+				cout << "ID = " << tournament.tournaments[i].id << endl;
+				cout << "Tournament's name: " << tournament.tournaments[i].name << endl;
+				cout << "Prize: " << tournament.tournaments[i].prize << endl;
 
+				designInputMenu();
 				printf("Start time: %02dd.%02dm.%02dy %02dh:%02dm\n\n",
 					tournament.tournaments[i].startTime.day,
 					tournament.tournaments[i].startTime.month,
@@ -73,8 +75,8 @@ public:
 					tournament.tournaments[i].endTime.min);
 
 				printDuration(i);
+				designInputMenu();
 
-				cout << "Prize: " << tournament.tournaments[i].prize << endl;
 				for (int j = 0; j < tournament.tournaments[i].teamCount; j++)
 				{
 					cout << "Team " << j + 1 << " name: " << tournament.tournaments[i].teams[j].name << endl;
@@ -85,6 +87,7 @@ public:
 					{
 						cout << "Player " << z + 1 << " name: " << tournament.tournaments[i].teams[j].playerNames[z] << endl;
 					}
+					designInputMenu();
 				}
 			}
 		}
@@ -111,7 +114,7 @@ public:
 		}
 		if (tournament.tournaments[index].duration.day > 0 || testMonth == true)
 		{
-			printf("%02dd.", tournament.tournaments[index].duration.day);
+			printf("%02dd", tournament.tournaments[index].duration.day);
 			testDay = true;
 		}
 		if (tournament.tournaments[index].duration.hour > 0 || testDay == true)
@@ -119,7 +122,7 @@ public:
 			printf("%02dh:", tournament.tournaments[index].duration.hour);
 		}
 
-		printf("%02dm\n\n", tournament.tournaments[index].duration.min);
+		printf("%02dm\n", tournament.tournaments[index].duration.min);
 
 	}
 
@@ -148,12 +151,12 @@ public:
 			end.min += 60;
 		}
 
-		if (start.hour>end.hour)
+		if (start.hour > end.hour)
 		{
 			end.day--;
 			end.hour += 24;
 		}
-		
+
 		dur.min = end.min - start.min;
 		dur.hour = end.hour - start.hour;
 
@@ -199,6 +202,90 @@ public:
 		} while (stop);
 	}
 
+	void editTournamentMenu() {
+		int id, checkId, editChoice, editTeamChoice, editPlayerName;
+
+		do
+		{
+			cout << "Enter the tournament's ID: ";
+			cin >> id;
+			checkId = getTournamentIndexById(id);
+			if (checkId != -1)
+			{
+				cout << "1. Change the tournament's name" << endl;
+				cout << "2. Change the tournament's prize" << endl;
+				cout << "3. Change the date of starting" << endl;
+				cout << "4. Change the date of ending" << endl;
+				cout << "5. Edit a team" << endl;
+				cout << "Your choice: ";
+				cin >> editChoice;
+				if (editChoice == 5)
+				{
+					cout << "1. Change team's name" << endl;
+					cout << "2. Change team's tag" << endl;
+					cout << "3. Change player's name" << endl;
+					cin >> editTeamChoice;
+
+					if (editTeamChoice == 3)
+					{
+						cout << "Enter which player's name you want to change: ";
+						cin >> editPlayerName;
+					}
+				}
+				//editTournament(editChoice, id);
+			}
+			else
+			{
+				cout << "There is not tournament with this ID!\nPlease try again:\n";
+			}
+		} while (checkId != -1);
+
+	}
+
+	int getTournamentIndexById(int id)
+	{
+		for (int i = 0; i < tournament.tournamentCount; i++)
+		{
+			if (tournament.tournaments[i].id == id)
+			{
+				return i;
+			}
+		}
+
+		return -1;
+	}
+
+	void deleteTournamentMenu()
+	{
+		int Id, checkId;
+
+		do
+		{
+			cout << "Enter the tournament's ID: ";
+			cin >> Id;
+
+			checkId = getTournamentIndexById(Id);
+
+			if (checkId != -1)
+			{
+				deleteTournament(Id, checkId);
+			}
+			else
+			{
+				cout << "There is not tournament with this ID!\nPlease try again:\n";
+			}
+		} while (checkId != -1);
+	}
+
+	void deleteTournament(int deleteID, int index)
+	{
+		for (int i = index; i < tournament.tournamentCount - 1; i++)
+		{
+			tournament.tournaments[i] = tournament.tournaments[i + 1];
+		}
+		tournament.tournamentCount--;
+	}
+
 	void createTournamentMenu() {
 
 		TOURNAMENT_INFO ti;
@@ -240,6 +327,7 @@ public:
 
 		} while (stop != true);
 
+		designInputMenu();
 		cout << "Enter tournament's prize: ";
 		cin.ignore();
 		getline(cin, ti.prize);
@@ -287,10 +375,10 @@ public:
 			createTournamentMenu();
 			break;
 		case 3:
-
+			editTournamentMenu();
 			break;
 		case 4:
-
+			deleteTournamentMenu();
 			break;
 		case 9:
 
