@@ -93,6 +93,7 @@ public:
 			cout << "\nYou haven't created any tournaments!\n";
 		}
 	}
+
 	void printDuration(int index) {
 
 		bool testYear = false, testMonth = false, testDay = false;
@@ -133,6 +134,7 @@ public:
 
 		return true;
 	}
+
 	void durationCalc(DATE start, DATE end, DATE& dur) {
 
 		bool stop = true;
@@ -146,6 +148,12 @@ public:
 			end.min += 60;
 		}
 
+		if (start.hour>end.hour)
+		{
+			end.day--;
+			end.hour += 24;
+		}
+		
 		dur.min = end.min - start.min;
 		dur.hour = end.hour - start.hour;
 
