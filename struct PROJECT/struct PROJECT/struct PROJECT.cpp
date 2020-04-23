@@ -33,7 +33,7 @@ public:
 	}
 
 	void greetings() {
-		
+
 	}
 
 	void displayMenu() {
@@ -51,13 +51,14 @@ public:
 	void displayTournaments() {
 		if (tournament.tournamentCount > 0)
 		{
-			cout << "List of all tournaments:\n";
-
+			cout << "\nList of all tournaments:\n";
+			designInputMenu();
 			for (int i = 0; i < tournament.tournamentCount; i++)
 			{
-				cout << "\nID = " << tournament.tournaments[i].id << endl;
-				cout << "\nTournament's name: " << tournament.tournaments[i].name << endl;
+				cout << "ID = " << tournament.tournaments[i].id << endl;
+				cout << "\nTournament's name: " << tournament.tournaments[i].name << "\n";
 
+				designInputMenu();
 				printf("Start time: %02dd.%02dm.%02dy %02dh:%02dm\n\n",
 					tournament.tournaments[i].startTime.day,
 					tournament.tournaments[i].startTime.month,
@@ -73,8 +74,8 @@ public:
 					tournament.tournaments[i].endTime.min);
 
 				printDuration(i);
-
-				cout << "Prize: " << tournament.tournaments[i].prize << endl;
+				designInputMenu();
+				cout << "Prize: " << tournament.tournaments[i].prize << "\n\n";
 				for (int j = 0; j < tournament.tournaments[i].teamCount; j++)
 				{
 					cout << "Team " << j + 1 << " name: " << tournament.tournaments[i].teams[j].name << endl;
@@ -85,6 +86,7 @@ public:
 					{
 						cout << "Player " << z + 1 << " name: " << tournament.tournaments[i].teams[j].playerNames[z] << endl;
 					}
+					designInputMenu();
 				}
 			}
 		}
@@ -119,7 +121,7 @@ public:
 			printf("%02dh:", tournament.tournaments[index].duration.hour);
 		}
 
-		printf("%02dm\n\n", tournament.tournaments[index].duration.min);
+		printf("%02dm\n", tournament.tournaments[index].duration.min);
 
 	}
 
@@ -148,12 +150,12 @@ public:
 			end.min += 60;
 		}
 
-		if (start.hour>end.hour)
+		if (start.hour > end.hour)
 		{
 			end.day--;
 			end.hour += 24;
 		}
-		
+
 		dur.min = end.min - start.min;
 		dur.hour = end.hour - start.hour;
 
@@ -239,7 +241,8 @@ public:
 			}
 
 		} while (stop != true);
-
+		
+		designInputMenu();
 		cout << "Enter tournament's prize: ";
 		cin.ignore();
 		getline(cin, ti.prize);
