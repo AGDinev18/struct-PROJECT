@@ -38,7 +38,8 @@ public:
 
 	void displayMenu(bool& isEntered) {
 
-		cout << "\n   ---Main Menu---\n";
+		designInputMenu();
+		cout << "    <---Main Menu-->\n";
 		cout << "1. Create a tournament\n";
 
 		if (isEntered)
@@ -97,7 +98,11 @@ public:
 					{
 						cout << "Player " << z + 1 << " name: " << tournament.tournaments[i].teams[j].playerNames[z] << endl;
 					}
-					designInputMenu();
+					if (i != tournament.tournaments[i].teamCount - 2)
+					{
+						designInputMenu();
+					}
+
 				}
 			}
 		}
@@ -374,7 +379,7 @@ public:
 				{
 					cout << "Enter new player's name: ";
 					cin.ignore();
-					getline(cin, tournament.tournaments[id].teams[teamIndex].playerNames[editPlayerNameNumber-1]);
+					getline(cin, tournament.tournaments[id].teams[teamIndex].playerNames[editPlayerNameNumber - 1]);
 				}
 			} while (checkPlayerNumber != true);
 
@@ -390,27 +395,29 @@ public:
 
 		do
 		{
-			cout << "Enter the tournament's ID: ";
+			cout << "\nEnter the tournament's ID: ";
 			cin >> id;
 			checkId = getTournamentIndexById(id);
 
 			if (checkId != -1)
 			{
-				cout << "\n1. Change the tournament's name" << endl;
-				cout << "2. Change the tournament's prize" << endl;
-				cout << "3. Change the date of starting" << endl;
-				cout << "4. Change the date of ending" << endl;
-				cout << "5. Edit a team" << endl;
-				cout << "Your choice: ";
+				designInputMenu();
+				cout << "Edit options:\n";
+				cout << "1. Change the tournament's name \n";
+				cout << "2. Change the tournament's prize \n";
+				cout << "3. Change the date of starting \n";
+				cout << "4. Change the date of ending \n";
+				cout << "5. Edit a team \n";
+				cout << "\nEnter your choice: ";
 				cin >> editChoice;
 				editTournament(editChoice, id);
 				if (editChoice == 5)
 				{
 					do
 					{
-						cout << "Enter the team's number: ";
+						cout << "\nEnter the team's number: ";
 						cin >> teamNumber;
-						teamNumberCheck = checkTeamNumber(teamNumber, id);
+						teamNumberCheck = checkTeamNumber(teamNumber - 1, id);
 						if (teamNumberCheck != true)
 						{
 							cout << "There is no team with that number!\nPlease try again!\n";
@@ -418,13 +425,14 @@ public:
 
 					} while (teamNumberCheck != true);
 
+					designInputMenu();
 					cout << "Edit options: \n";
 					cout << "1. Change team's name \n";
 					cout << "2. Change team's tag \n";
 					cout << "3. Change player's name \n";
-					cout << "Enter what you want to edit: ";
+					cout << "\nEnter what you want to edit: ";
 					cin >> editTeamChoice;
-					editTeam(editTeamChoice, id, teamNumber);
+					editTeam(editTeamChoice, id, teamNumber - 1);
 
 				}
 				//editTournament(editChoice, id);
@@ -456,7 +464,7 @@ public:
 
 		do
 		{
-			cout << "Enter the tournament's ID: ";
+			cout << "\n\nEnter the tournament's ID: ";
 			cin >> Id;
 
 			checkId = getTournamentIndexById(Id);
@@ -568,7 +576,6 @@ public:
 			getline(cin, ti.teams[j].name);
 
 			cout << " Team tag: ";
-			//cin.ignore();
 			getline(cin, ti.teams[j].tag);
 
 			cout << "Enter player's names: " << endl;
@@ -576,12 +583,14 @@ public:
 			for (int i = 0; i < ti.playersOnTeam; i++)
 			{
 				cout << " Player " << i + 1 << ": ";
-				//cin.ignore();
 				getline(cin, ti.teams[j].playerNames[i]);
 			}
-			designInputMenu();
-		}
 
+			if (j < ti.teamCount - 1) {
+				designInputMenu();
+			}
+
+		}
 		tournament.create(ti);
 	}
 

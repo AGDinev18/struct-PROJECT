@@ -7,7 +7,7 @@ using namespace std;
 
 void designInputMenu()
 {
-	cout << "------------------\n";
+	cout << "----------------------\n";
 }
 
 bool tryReadInt(int& result, int min, int max) {
