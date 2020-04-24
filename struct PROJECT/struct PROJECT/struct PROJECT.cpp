@@ -49,7 +49,7 @@ public:
 		}
 
 		cout << "9. Exit\n";
-		cout << "\nYour choice: ";
+		cout << "\nEnter your choice: ";
 
 		menuChoice(isEntered);
 	}
@@ -215,15 +215,16 @@ public:
 	void editTournament(int editChoice, int id)
 	{
 		bool stop = false;
+		cin.ignore();
 
 		switch (editChoice)
 		{
 		case 1:
-			cout << "Enter the new name: " << endl;
+			cout << "Enter the new name: ";
 			getline(cin, tournament.tournaments[id].name);
 			break;
 		case 2:
-			cout << "Enter the new prize: " << endl;
+			cout << "Enter the new prize: ";
 			getline(cin, tournament.tournaments[id].prize);
 			break;
 		case 3:
@@ -262,7 +263,8 @@ public:
 					&& tournament.tournaments[id].duration.month == 0
 					&& tournament.tournaments[id].duration.day == 0
 					&& tournament.tournaments[id].duration.hour == 0
-					&& tournament.tournaments[id].duration.min < 30)
+					&& tournament.tournaments[id].duration.min < 30
+					&& stop == true)
 				{
 					cout << "\nA tournament have to last at least 30 minutes!\n";
 					cout << "Please try again!\n";
@@ -368,6 +370,12 @@ public:
 				{
 					cout << "There is no player with this number!\nPlease try again!\n";
 				}
+				else
+				{
+					cout << "Enter new player's name: ";
+					cin.ignore();
+					getline(cin, tournament.tournaments[id].teams[teamIndex].playerNames[editPlayerNameNumber-1]);
+				}
 			} while (checkPlayerNumber != true);
 
 		default:
@@ -388,7 +396,7 @@ public:
 
 			if (checkId != -1)
 			{
-				cout << "1. Change the tournament's name" << endl;
+				cout << "\n1. Change the tournament's name" << endl;
 				cout << "2. Change the tournament's prize" << endl;
 				cout << "3. Change the date of starting" << endl;
 				cout << "4. Change the date of ending" << endl;
@@ -400,7 +408,7 @@ public:
 				{
 					do
 					{
-						cout << "Enter the team's number: " << endl;
+						cout << "Enter the team's number: ";
 						cin >> teamNumber;
 						teamNumberCheck = checkTeamNumber(teamNumber, id);
 						if (teamNumberCheck != true)
@@ -410,9 +418,11 @@ public:
 
 					} while (teamNumberCheck != true);
 
-					cout << "1. Change team's name" << endl;
-					cout << "2. Change team's tag" << endl;
-					cout << "3. Change player's name" << endl;
+					cout << "Edit options: \n";
+					cout << "1. Change team's name \n";
+					cout << "2. Change team's tag \n";
+					cout << "3. Change player's name \n";
+					cout << "Enter what you want to edit: ";
 					cin >> editTeamChoice;
 					editTeam(editTeamChoice, id, teamNumber);
 
@@ -459,7 +469,7 @@ public:
 			{
 				cout << "There is not tournament with this ID!\nPlease try again:\n";
 			}
-		} while (checkId != -1);
+		} while (checkId == -1);
 	}
 
 	void deleteTournament(int deleteID, int index)
