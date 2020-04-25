@@ -36,10 +36,9 @@ public:
 
 	}
 
-	void displayMenu(bool& isEntered) {
-
+	bool displayMenu(bool& isEntered) {
 		designInputMenu();
-		cout << "    <---Main Menu-->\n";
+		cout << "   <---Main Menu--->\n";
 		cout << "1. Create a tournament\n";
 
 		if (isEntered)
@@ -52,7 +51,7 @@ public:
 		cout << "9. Exit\n";
 		cout << "\nEnter your choice: ";
 
-		menuChoice(isEntered);
+		return menuChoice(isEntered);
 	}
 
 	void displayTournaments() {
@@ -61,9 +60,9 @@ public:
 
 			cout << "\nList of all tournaments:\n";
 
-			designInputMenu();
 			for (int i = 0; i < tournament.tournamentCount; i++)
 			{
+				designInputMenu();
 				cout << "ID = " << tournament.tournaments[i].id << endl;
 
 				cout << "Tournament's name: " << tournament.tournaments[i].name << endl;
@@ -98,12 +97,9 @@ public:
 					{
 						cout << "Player " << z + 1 << " name: " << tournament.tournaments[i].teams[j].playerNames[z] << endl;
 					}
-					if (i != tournament.tournaments[i].teamCount - 2)
-					{
-						designInputMenu();
-					}
-
+					designInputMenu();
 				}
+				cout << "\n\n";
 			}
 		}
 		else
@@ -325,8 +321,7 @@ public:
 
 			} while (stop != true);
 			break;
-
-
+		default: break;
 		}
 	}
 
@@ -395,7 +390,7 @@ public:
 
 		do
 		{
-			cout << "\nEnter the tournament's ID: ";
+			cout << "Enter the tournament's ID: ";
 			cin >> id;
 			checkId = getTournamentIndexById(id);
 
@@ -408,6 +403,7 @@ public:
 				cout << "3. Change the date of starting \n";
 				cout << "4. Change the date of ending \n";
 				cout << "5. Edit a team \n";
+				cout << "9. Back to the main menu\n";
 				cout << "\nEnter your choice: ";
 				cin >> editChoice;
 				editTournament(editChoice, id);
@@ -435,14 +431,12 @@ public:
 					editTeam(editTeamChoice, id, teamNumber - 1);
 
 				}
-				//editTournament(editChoice, id);
 			}
 			else
 			{
 				cout << "There is not tournament with this ID!\nPlease try again:\n";
 			}
 		} while (checkId == -1);
-
 	}
 
 	int getTournamentIndexById(int id)
@@ -464,7 +458,7 @@ public:
 
 		do
 		{
-			cout << "\n\nEnter the tournament's ID: ";
+			cout << "\nEnter the tournament's ID: ";
 			cin >> Id;
 
 			checkId = getTournamentIndexById(Id);
@@ -475,7 +469,7 @@ public:
 			}
 			else
 			{
-				cout << "There is not tournament with this ID!\nPlease try again:\n";
+				cout << "\nThere is not any tournament with this ID!\nPlease try again:";
 			}
 		} while (checkId == -1);
 	}
@@ -594,7 +588,7 @@ public:
 		tournament.create(ti);
 	}
 
-	void menuChoice(bool& isEntered) {
+	bool menuChoice(bool& isEntered) {
 		int choice;
 		cin >> choice;
 		switch (choice)
@@ -613,13 +607,13 @@ public:
 			deleteTournamentMenu();
 			break;
 		case 9:
-
+			return false;
 			break;
 
 		default:
 			break;
 		}
-
+		return true;
 	}
 
 };
@@ -635,10 +629,11 @@ int main()
 
 	TournamentMenu menu(tournament);
 	bool isEntered = false;
+	bool stop=true;
 	system("color 0b");
 
-	while (true)
+	do
 	{
-		menu.displayMenu(isEntered);
-	}
+		stop = menu.displayMenu(isEntered);
+	} while (stop);
 }
