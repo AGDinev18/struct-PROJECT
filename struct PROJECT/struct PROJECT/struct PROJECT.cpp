@@ -6,7 +6,7 @@
 
 using namespace std;
 
-class Tournament {
+class Data {
 private:
 
 public:
@@ -20,125 +20,26 @@ public:
 		tournaments[tournamentCount++] = tournament;
 	}
 
-};
-
-class TournamentMenu {
-private:
-	Tournament tournament;
-
-public:
-
-	TournamentMenu(Tournament t) {
-		this->tournament = t;
-	}
-
-	void greetings() {
-
-	}
-
-	void displayMenu(bool& isEntered) {
-
-		designInputMenu();
-		cout << "    <---Main Menu-->\n";
-		cout << "1. Create a tournament\n";
-
-		if (isEntered)
+	void deleteTournament(int deleteID, int index)
+	{
+		for (int i = index; i < tournamentCount - 1; i++)
 		{
-			cout << "2. Show all tournaments\n";
-			cout << "3. Edit a tournament\n";
-			cout << "4. Delete a tournament\n";
+			tournaments[i] = tournaments[i + 1];
 		}
-
-		cout << "9. Exit\n";
-		cout << "\nEnter your choice: ";
-
-		menuChoice(isEntered);
+		tournamentCount--;
 	}
 
-	void displayTournaments() {
-		if (tournament.tournamentCount > 0)
+	int getTournamentIndexById(int id)
+	{
+		for (int i = 0; i < tournamentCount; i++)
 		{
-
-			cout << "\nList of all tournaments:\n";
-
-			designInputMenu();
-			for (int i = 0; i < tournament.tournamentCount; i++)
+			if (tournaments[i].id == id)
 			{
-				cout << "ID = " << tournament.tournaments[i].id << endl;
-
-				cout << "Tournament's name: " << tournament.tournaments[i].name << endl;
-				cout << "Prize: " << tournament.tournaments[i].prize << endl;
-				designInputMenu();
-
-				printf("Start time: %02dd.%02dm.%02dy %02dh:%02dm\n\n",
-					tournament.tournaments[i].startTime.day,
-					tournament.tournaments[i].startTime.month,
-					tournament.tournaments[i].startTime.year,
-					tournament.tournaments[i].startTime.hour,
-					tournament.tournaments[i].startTime.min);
-
-				printf("End time: %02dd.%02dm.%02dy %02dh:%02dm\n\n",
-					tournament.tournaments[i].endTime.day,
-					tournament.tournaments[i].endTime.month,
-					tournament.tournaments[i].endTime.year,
-					tournament.tournaments[i].endTime.hour,
-					tournament.tournaments[i].endTime.min);
-
-				printDuration(i);
-				designInputMenu();
-
-				for (int j = 0; j < tournament.tournaments[i].teamCount; j++)
-				{
-					cout << "Team " << j + 1 << ":\n";
-					cout << "Name: " << tournament.tournaments[i].teams[j].name << endl;
-					cout << "Tag: " << tournament.tournaments[i].teams[j].tag << endl;
-					cout << "Players' names:" << endl;
-
-					for (int z = 0; z < tournament.tournaments[i].playersOnTeam; z++)
-					{
-						cout << "Player " << z + 1 << " name: " << tournament.tournaments[i].teams[j].playerNames[z] << endl;
-					}
-					if (i != tournament.tournaments[i].teamCount - 2)
-					{
-						designInputMenu();
-					}
-
-				}
+				return i;
 			}
 		}
-		else
-		{
-			cout << "\nYou haven't created any tournaments!\n";
-		}
-	}
 
-	void printDuration(int index) {
-
-		bool testYear = false, testMonth = false, testDay = false;
-
-		cout << "Duration: ";
-		if (tournament.tournaments[index].duration.year > 0)
-		{
-			printf("%0002dy.", tournament.tournaments[index].duration.year);
-			testYear = true;
-		}
-		if (tournament.tournaments[index].duration.month > 0 || testYear == true)
-		{
-			printf("%02dm.", tournament.tournaments[index].duration.month);
-			testMonth = true;
-		}
-		if (tournament.tournaments[index].duration.day > 0 || testMonth == true)
-		{
-			printf("%02dd ", tournament.tournaments[index].duration.day);
-			testDay = true;
-		}
-		if (tournament.tournaments[index].duration.hour > 0 || testDay == true)
-		{
-			printf("%02dh:", tournament.tournaments[index].duration.hour);
-		}
-
-		printf("%02dm\n", tournament.tournaments[index].duration.min);
-
+		return -1;
 	}
 
 	bool checkIncorrectDate(DATE start, DATE end) {
@@ -217,6 +118,139 @@ public:
 		} while (stop);
 	}
 
+	bool checkTeamNumber(int number, int id) {
+		if (tournaments[id].teamCount > number)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	bool checkPlayerByNumber(int number, int id, int teamIndex) {
+
+		if (tournaments[id].playersOnTeam >= number && number > 0)
+		{
+			return true;
+		}
+		return false;
+	}
+};
+
+class Presentation {
+private:
+	Data data;
+
+public:
+
+	Presentation(Data t) {
+		this->data = t;
+	}
+
+	void greetings() {
+
+	}
+
+	bool displayMenu(bool& isEntered) {
+		designInputMenu();
+		cout << "   <---Main Menu--->\n";
+		cout << "1. Create a tournament\n";
+
+		if (isEntered)
+		{
+			cout << "2. Show all tournaments\n";
+			cout << "3. Edit a tournament\n";
+			cout << "4. Delete a tournament\n";
+		}
+
+		cout << "9. Exit\n";
+		cout << "\nEnter your choice: ";
+
+		return menuChoice(isEntered);
+	}
+
+	void displayTournaments() {
+		if (data.tournamentCount > 0)
+		{
+
+			cout << "\nList of all tournaments:\n";
+
+			for (int i = 0; i < data.tournamentCount; i++)
+			{
+				designInputMenu();
+				cout << "ID = " << data.tournaments[i].id << endl;
+
+				cout << "Tournament's name: " << data.tournaments[i].name << endl;
+				cout << "Prize: " << data.tournaments[i].prize << endl;
+				designInputMenu();
+
+				printf("Start time: %02dd.%02dm.%02dy %02dh:%02dm\n\n",
+					data.tournaments[i].startTime.day,
+					data.tournaments[i].startTime.month,
+					data.tournaments[i].startTime.year,
+					data.tournaments[i].startTime.hour,
+					data.tournaments[i].startTime.min);
+
+				printf("End time: %02dd.%02dm.%02dy %02dh:%02dm\n\n",
+					data.tournaments[i].endTime.day,
+					data.tournaments[i].endTime.month,
+					data.tournaments[i].endTime.year,
+					data.tournaments[i].endTime.hour,
+					data.tournaments[i].endTime.min);
+
+				printDuration(i);
+				designInputMenu();
+
+				for (int j = 0; j < data.tournaments[i].teamCount; j++)
+				{
+					cout << "Team " << j + 1 << ":\n";
+					cout << "Name: " << data.tournaments[i].teams[j].name << endl;
+					cout << "Tag: " << data.tournaments[i].teams[j].tag << endl;
+					cout << "Players' names:" << endl;
+
+					for (int z = 0; z < data.tournaments[i].playersOnTeam; z++)
+					{
+						cout << "Player " << z + 1 << " name: " << data.tournaments[i].teams[j].playerNames[z] << endl;
+					}
+					designInputMenu();
+				}
+				cout << "\n\n";
+			}
+		}
+		else
+		{
+			cout << "\nYou haven't created any tournaments!\n";
+		}
+	}
+
+	void printDuration(int index) {
+
+		bool testYear = false, testMonth = false, testDay = false;
+
+		cout << "Duration: ";
+		if (data.tournaments[index].duration.year > 0)
+		{
+			printf("%0002dy.", data.tournaments[index].duration.year);
+			testYear = true;
+		}
+		if (data.tournaments[index].duration.month > 0 || testYear == true)
+		{
+			printf("%02dm.", data.tournaments[index].duration.month);
+			testMonth = true;
+		}
+		if (data.tournaments[index].duration.day > 0 || testMonth == true)
+		{
+			printf("%02dd ", data.tournaments[index].duration.day);
+			testDay = true;
+		}
+		if (data.tournaments[index].duration.hour > 0 || testDay == true)
+		{
+			printf("%02dh:", data.tournaments[index].duration.hour);
+		}
+
+		printf("%02dm\n", data.tournaments[index].duration.min);
+
+	}
+
 	void editTournament(int editChoice, int id)
 	{
 		bool stop = false;
@@ -226,11 +260,11 @@ public:
 		{
 		case 1:
 			cout << "Enter the new name: ";
-			getline(cin, tournament.tournaments[id].name);
+			getline(cin, data.tournaments[id].name);
 			break;
 		case 2:
 			cout << "Enter the new prize: ";
-			getline(cin, tournament.tournaments[id].prize);
+			getline(cin, data.tournaments[id].prize);
 			break;
 		case 3:
 			cout << "Enter the new date of starting: " << endl;
@@ -239,18 +273,18 @@ public:
 			{
 				designInputMenu();
 				cout << "Enter start date:\n";
-				enterDate(tournament.tournaments[id].startTime.year,
-					tournament.tournaments[id].startTime.month,
-					tournament.tournaments[id].startTime.day);
+				enterDate(data.tournaments[id].startTime.year,
+					data.tournaments[id].startTime.month,
+					data.tournaments[id].startTime.day);
 
 				enterTime(
-					tournament.tournaments[id].startTime.hour,
-					tournament.tournaments[id].startTime.min
+					data.tournaments[id].startTime.hour,
+					data.tournaments[id].startTime.min
 				);
 
 				designInputMenu();
 
-				stop = checkIncorrectDate(tournament.tournaments[id].startTime, tournament.tournaments[id].endTime);
+				stop = data.checkIncorrectDate(data.tournaments[id].startTime, data.tournaments[id].endTime);
 
 				if (stop != true)
 				{
@@ -258,17 +292,17 @@ public:
 					cout << "Please try again!\n";
 				}
 
-				calcDuration(
-					tournament.tournaments[id].startTime,
-					tournament.tournaments[id].endTime,
-					tournament.tournaments[id].duration
+				data.calcDuration(
+					data.tournaments[id].startTime,
+					data.tournaments[id].endTime,
+					data.tournaments[id].duration
 				);
 
-				if (tournament.tournaments[id].duration.year == 0
-					&& tournament.tournaments[id].duration.month == 0
-					&& tournament.tournaments[id].duration.day == 0
-					&& tournament.tournaments[id].duration.hour == 0
-					&& tournament.tournaments[id].duration.min < 30
+				if (data.tournaments[id].duration.year == 0
+					&& data.tournaments[id].duration.month == 0
+					&& data.tournaments[id].duration.day == 0
+					&& data.tournaments[id].duration.hour == 0
+					&& data.tournaments[id].duration.min < 30
 					&& stop == true)
 				{
 					cout << "\nA tournament have to last at least 30 minutes!\n";
@@ -286,19 +320,19 @@ public:
 				designInputMenu();
 				cout << "Enter end date:\n";
 				enterDate(
-					tournament.tournaments[id].endTime.year,
-					tournament.tournaments[id].endTime.month,
-					tournament.tournaments[id].endTime.day
+					data.tournaments[id].endTime.year,
+					data.tournaments[id].endTime.month,
+					data.tournaments[id].endTime.day
 				);
 
 				enterTime(
-					tournament.tournaments[id].endTime.hour,
-					tournament.tournaments[id].endTime.min
+					data.tournaments[id].endTime.hour,
+					data.tournaments[id].endTime.min
 				);
 
 				designInputMenu();
 
-				stop = checkIncorrectDate(tournament.tournaments[id].startTime, tournament.tournaments[id].endTime);
+				stop = data.checkIncorrectDate(data.tournaments[id].startTime, data.tournaments[id].endTime);
 
 				if (stop != true)
 				{
@@ -306,17 +340,17 @@ public:
 					cout << "Please try again!\n";
 				}
 
-				calcDuration(
-					tournament.tournaments[id].startTime,
-					tournament.tournaments[id].endTime,
-					tournament.tournaments[id].duration
+				data.calcDuration(
+					data.tournaments[id].startTime,
+					data.tournaments[id].endTime,
+					data.tournaments[id].duration
 				);
 
-				if (tournament.tournaments[id].duration.year == 0
-					&& tournament.tournaments[id].duration.month == 0
-					&& tournament.tournaments[id].duration.day == 0
-					&& tournament.tournaments[id].duration.hour == 0
-					&& tournament.tournaments[id].duration.min < 30)
+				if (data.tournaments[id].duration.year == 0
+					&& data.tournaments[id].duration.month == 0
+					&& data.tournaments[id].duration.day == 0
+					&& data.tournaments[id].duration.hour == 0
+					&& data.tournaments[id].duration.min < 30)
 				{
 					cout << "\nA tournament have to last at least 30 minutes!\n";
 					cout << "Please try again!\n";
@@ -325,26 +359,8 @@ public:
 
 			} while (stop != true);
 			break;
-
-
+		default: break;
 		}
-	}
-
-	bool checkTeamNumber(int number, int id) {
-		if (tournament.tournaments[id].teamCount > number)
-		{
-			return true;
-		}
-		return false;
-	}
-
-	bool checkPlayerByNumber(int number, int id, int teamIndex) {
-
-		if (tournament.tournaments[id].playersOnTeam >= number && number > 0)
-		{
-			return true;
-		}
-		return false;
 	}
 
 	void editTeam(int choice, int id, int teamIndex) {
@@ -356,13 +372,13 @@ public:
 		case 1:
 			cout << "Enter new team's name: ";
 			cin.ignore();
-			getline(cin, tournament.tournaments[id].teams[teamIndex].name);
+			getline(cin, data.tournaments[id].teams[teamIndex].name);
 			break;
 
 		case 2:
 			cout << "Enter new team's tag: ";
 			cin.ignore();
-			getline(cin, tournament.tournaments[id].teams[teamIndex].tag);
+			getline(cin, data.tournaments[id].teams[teamIndex].tag);
 			break;
 
 		case 3:
@@ -370,7 +386,7 @@ public:
 			{
 				cout << "Enter the player's number: ";
 				cin >> editPlayerNameNumber;
-				checkPlayerNumber = checkPlayerByNumber(editPlayerNameNumber, id, teamIndex);
+				checkPlayerNumber = data.checkPlayerByNumber(editPlayerNameNumber, id, teamIndex);
 				if (checkPlayerNumber != true)
 				{
 					cout << "There is no player with this number!\nPlease try again!\n";
@@ -379,7 +395,7 @@ public:
 				{
 					cout << "Enter new player's name: ";
 					cin.ignore();
-					getline(cin, tournament.tournaments[id].teams[teamIndex].playerNames[editPlayerNameNumber - 1]);
+					getline(cin, data.tournaments[id].teams[teamIndex].playerNames[editPlayerNameNumber - 1]);
 				}
 			} while (checkPlayerNumber != true);
 
@@ -395,9 +411,9 @@ public:
 
 		do
 		{
-			cout << "\nEnter the tournament's ID: ";
+			cout << "Enter the tournament's ID: ";
 			cin >> id;
-			checkId = getTournamentIndexById(id);
+			checkId = data.getTournamentIndexById(id);
 
 			if (checkId != -1)
 			{
@@ -408,6 +424,7 @@ public:
 				cout << "3. Change the date of starting \n";
 				cout << "4. Change the date of ending \n";
 				cout << "5. Edit a team \n";
+				cout << "9. Back to the main menu\n";
 				cout << "\nEnter your choice: ";
 				cin >> editChoice;
 				editTournament(editChoice, id);
@@ -417,7 +434,7 @@ public:
 					{
 						cout << "\nEnter the team's number: ";
 						cin >> teamNumber;
-						teamNumberCheck = checkTeamNumber(teamNumber - 1, id);
+						teamNumberCheck = data.checkTeamNumber(teamNumber - 1, id);
 						if (teamNumberCheck != true)
 						{
 							cout << "There is no team with that number!\nPlease try again!\n";
@@ -435,28 +452,15 @@ public:
 					editTeam(editTeamChoice, id, teamNumber - 1);
 
 				}
-				//editTournament(editChoice, id);
 			}
 			else
 			{
 				cout << "There is not tournament with this ID!\nPlease try again:\n";
 			}
 		} while (checkId == -1);
-
 	}
 
-	int getTournamentIndexById(int id)
-	{
-		for (int i = 0; i < tournament.tournamentCount; i++)
-		{
-			if (tournament.tournaments[i].id == id)
-			{
-				return i;
-			}
-		}
 
-		return -1;
-	}
 
 	void deleteTournamentMenu()
 	{
@@ -464,30 +468,23 @@ public:
 
 		do
 		{
-			cout << "\n\nEnter the tournament's ID: ";
+			cout << "\nEnter the tournament's ID: ";
 			cin >> Id;
 
-			checkId = getTournamentIndexById(Id);
+			checkId = data.getTournamentIndexById(Id);
 
 			if (checkId != -1)
 			{
-				deleteTournament(Id, checkId);
+				data.deleteTournament(Id, checkId);
 			}
 			else
 			{
-				cout << "There is not tournament with this ID!\nPlease try again:\n";
+				cout << "\nThere is not any tournament with this ID!\nPlease try again:";
 			}
 		} while (checkId == -1);
 	}
 
-	void deleteTournament(int deleteID, int index)
-	{
-		for (int i = index; i < tournament.tournamentCount - 1; i++)
-		{
-			tournament.tournaments[i] = tournament.tournaments[i + 1];
-		}
-		tournament.tournamentCount--;
-	}
+
 
 	void createTournamentMenu() {
 
@@ -511,7 +508,7 @@ public:
 			enterDate(ti.endTime.year, ti.endTime.month, ti.endTime.day);
 			enterTime(ti.endTime.hour, ti.endTime.min);
 
-			stop = checkIncorrectDate(ti.startTime, ti.endTime);
+			stop = data.checkIncorrectDate(ti.startTime, ti.endTime);
 
 			if (stop != true)
 			{
@@ -519,7 +516,7 @@ public:
 				cout << "Please try again!\n";
 			}
 
-			calcDuration(ti.startTime, ti.endTime, ti.duration);
+			data.calcDuration(ti.startTime, ti.endTime, ti.duration);
 
 			if (ti.duration.year == 0
 				&& ti.duration.month == 0
@@ -562,8 +559,6 @@ public:
 				checkPlayersCount = false;
 			}
 
-
-
 		} while (checkPlayersCount != true);
 		designInputMenu();
 
@@ -591,54 +586,74 @@ public:
 			}
 
 		}
-		tournament.create(ti);
+		data.create(ti);
 	}
 
-	void menuChoice(bool& isEntered) {
+	bool menuChoice(bool& isEntered) {
 		int choice;
 		cin >> choice;
-		switch (choice)
+		if (!isEntered)
 		{
-		case 1:
-			createTournamentMenu();
-			isEntered = true;
-			break;
-		case 2:
-			displayTournaments();
-			break;
-		case 3:
-			editTournamentMenu();
-			break;
-		case 4:
-			deleteTournamentMenu();
-			break;
-		case 9:
+			switch (choice)
+			{
+			case 1:
+				createTournamentMenu();
+				isEntered = true;
+				break;
+			case 9:
+				return false;
+				break;
+			default:
+				cout << "\nThere is no such a option!\n\n";
+				break;
+			}
+		}
+		else
+		{
+			switch (choice)
+			{
+			case 1:
+				createTournamentMenu();
+				break;
+			case 2:
+				displayTournaments();
+				break;
+			case 3:
+				editTournamentMenu();
+				break;
+			case 4:
+				deleteTournamentMenu();
+				break;
+			case 9:
+				return false;
+				break;
 
-			break;
-
-		default:
-			break;
+			default:
+				cout << "\nThere is no such a option!\n\n";
+				break;
+			}
+			return true;
 		}
 
-	}
 
+	}
 };
 
 int main()
 {
 	//TOURNAMENT_INFO t = { "T1", { 1, 1, 1111 }, { 21, 0 }, { 23, 0 }, { { "team1", "t1", { "p1", "p2", "p3", "p4", "p5" } } }, "kupa" };
-
-	Tournament tournament;
-
-	//tournament.create(t);
-
-
-	TournamentMenu menu(tournament);
-	bool isEntered = false;
 	system("color 0b");
 
-	while (true)
+	Data data;
+	Presentation present(data);
+
+	//data.create(t);
+
+	bool isEntered = false;
+	bool stop = true;
+
+	do
 	{
-		menu.displayMenu(isEntered);
-	}
+		stop = present.displayMenu(isEntered);
+	} while (stop);
 }
