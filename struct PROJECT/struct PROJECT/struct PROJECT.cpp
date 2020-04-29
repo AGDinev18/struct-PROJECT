@@ -54,9 +54,24 @@ public:
 		return true;
 	}
 
-	void calcDuration(DATE start, DATE end, DATE& dur) {
-
+	void calcSpecTime(int& start, int& end, int& dur) {
 		bool stop = true;
+		do
+		{
+			if (end > start) {
+				end--;
+				dur++;
+			}
+			else
+			{
+				stop = false;
+			}
+
+		} while (stop);
+
+	}
+
+	void calcDuration(DATE start, DATE end, DATE& dur) {
 
 		dur.day = 0;
 		dur.month = 0;
@@ -76,46 +91,10 @@ public:
 		dur.min = end.min - start.min;
 		dur.hour = end.hour - start.hour;
 
-		do
-		{
-			if (end.day > start.day) {
-				end.day--;
-				dur.day++;
-			}
-			else
-			{
-				stop = false;
-			}
+		calcSpecTime(start.day, end.day, dur.day);
+		calcSpecTime(start.month, end.month, dur.month);
+		calcSpecTime(start.year, end.year, dur.year);
 
-		} while (stop);
-
-		stop = true;
-
-		do
-		{
-			if (end.month > start.month) {
-				end.month--;
-				dur.month++;
-			}
-			else
-			{
-				stop = false;
-			}
-		} while (stop);
-
-		stop = true;
-
-		do
-		{
-			if (end.year > start.year) {
-				end.year--;
-				dur.year++;
-			}
-			else
-			{
-				stop = false;
-			}
-		} while (stop);
 	}
 
 	bool checkTeamNumber(int number, int id) {
@@ -496,7 +475,6 @@ public:
 		cin.ignore();
 		getline(cin, ti.name);
 
-		// DATE
 		do
 		{
 			designInputMenu();
@@ -534,14 +512,12 @@ public:
 		designInputMenu();
 
 		cout << "Enter tournament's prize: ";
-		//cin.ignore();
 		getline(cin, ti.prize);
 		designInputMenu();
 
 		do
 		{
-			cout << "Team count: ";
-			cin >> ti.teamCount;
+			ti.teamCount = enterInt(1, 16, "Team count: ");
 			if (ti.teamCount > 16)
 			{
 				cout << "There can't be more than 16 teams in a tournament!\nPlease try again:\n";
@@ -551,8 +527,7 @@ public:
 
 		do
 		{
-			cout << "Enter how much players are in a team: ";
-			cin >> ti.playersOnTeam;
+			ti.playersOnTeam = enterInt(1, 5, "Enter how much players are in a team: ");
 			if (ti.playersOnTeam > 5)
 			{
 				cout << "There must be less than or equal to 5 players in a team!\nPlease try again:\n";
@@ -562,12 +537,11 @@ public:
 		} while (checkPlayersCount != true);
 		designInputMenu();
 
-		cin.ignore(INT_MAX, '\n');
 		for (int j = 0; j < ti.teamCount; j++)
 		{
 			cout << "Enter data for team " << j + 1 << ": " << endl;
-			cout << " Team name: ";
 
+			cout << " Team name: ";
 			getline(cin, ti.teams[j].name);
 
 			cout << " Team tag: ";
@@ -641,13 +615,10 @@ public:
 
 int main()
 {
-	//TOURNAMENT_INFO t = { "T1", { 1, 1, 1111 }, { 21, 0 }, { 23, 0 }, { { "team1", "t1", { "p1", "p2", "p3", "p4", "p5" } } }, "kupa" };
 	system("color 0b");
 
 	Data data;
 	Presentation present(data);
-
-	//data.create(t);
 
 	bool isEntered = false;
 	bool stop = true;
