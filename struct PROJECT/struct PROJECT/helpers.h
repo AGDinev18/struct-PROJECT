@@ -1,5 +1,8 @@
 #pragma once
 
+bool checkIncorrectDate(DATE start, DATE end);
+
+void calcSpecTime(int& start, int& end, int& dur);
 
 bool tryReadInt(int& result, int min, int max);
 
@@ -13,4 +16,4 @@ int enterInt(int min, int max, string text);
 
 void enterTime(int& hour, int& min);
 
-void designInputMenu();
+void printSeperator();

@@ -5,11 +5,43 @@
 
 using namespace std;
 
-void designInputMenu()
+void printSeperator()
 {
 	cout << "-----------------------\n";
 }
 
+// A function that cheks if the given date is valid
+bool checkIncorrectDate(DATE start, DATE end) {
+
+	if (start.year > end.year
+		|| (start.year == end.year && start.month > end.month)
+		|| (start.month == end.month && start.day > end.day)
+		|| (start.day == end.day && start.hour > end.hour)
+		|| (start.hour == end.hour && start.min > end.min))
+		return false;
+
+	return true;
+}
+
+// A function that calculate the duration for specific time
+void calcSpecTime(int& start, int& end, int& dur) {
+	bool stop = true;
+	do
+	{
+		if (end > start) {
+			end--;
+			dur++;
+		}
+		else
+		{
+			stop = false;
+		}
+
+	} while (stop);
+
+}
+
+// A function that checks if there are no letters in the input
 bool tryReadInt(int& result, int min, int max) {
 
 	string input = "";
@@ -76,6 +108,7 @@ bool isValidDate(int d, int m, int y)
 	return true;
 }
 
+// A function that is used to check if the input is valid
 int enterInt(int min, int max, string text)
 {
 	bool isValid;
@@ -93,6 +126,7 @@ int enterInt(int min, int max, string text)
 	return result;
 }
 
+// A function that is used to enter the start and date
 void enterDate(int& year, int& month, int& day)
 {
 	bool isDateValid;
@@ -109,6 +143,7 @@ void enterDate(int& year, int& month, int& day)
 	} while (!isDateValid);
 }
 
+// A function that is used to enter the hours and minutes of the tournament
 void enterTime(int& hour, int& min) {
 
 	hour = enterInt(0, 24, " Hour: ");
